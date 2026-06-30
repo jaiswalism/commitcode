@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommitCode Popup</title>
+    <style>
+      body {
+        width: 300px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        margin: 0;
+        background-color: #111;
+        color: #f0f0f0;
+        text-align: center;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      button {
+        background-color: #0070f3;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      button:hover {
+        background-color: #0051a2;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h2>CommitCode</h2>
+      <p>Your submissions sync automatically in the background.</p>
+      <button id="open-options">Open Settings</button>
+    </div>
+    <script type="module">
+      document.getElementById('open-options').addEventListener('click', () => {
+        chrome.runtime.openOptionsPage();
+      });
+    </script>
+  </body>
+</html>

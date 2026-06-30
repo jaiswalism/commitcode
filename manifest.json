@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "CommitCode",
+  "version": "1.0.0",
+  "description": "Privacy-first browser extension that automatically syncs accepted coding problem submissions from LeetCode to GitHub.",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["src/content/index.ts"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "host_permissions": [
+    "https://leetcode.com/*"
+  ],
+  "permissions": [
+    "scripting",
+    "storage"
+  ],
+  "options_ui": {
+    "page": "src/options/index.html",
+    "open_in_tab": true
+  }
+}
