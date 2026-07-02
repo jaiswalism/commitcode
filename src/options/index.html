@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CommitCode Options</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CommitCode Settings</h1>
+      <p>Configure your GitHub connection and synchronization preferences.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>GitHub Connection</h2>
+
+        <button id="open-setup-modal" class="btn btn-secondary" style="margin-bottom: 20px; width: 100%;">ℹ️ How to configure CommitCode (Setup Guide)</button>
+        
+        <div class="form-group">
+          <label for="pat">Personal Access Token (PAT)</label>
+          <input type="password" id="pat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          <small>Needs <strong>Contents: Read and write</strong> permission on a fine-grained token. Stored securely in local storage.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="repo">Repository</label>
+          <input type="text" id="repo" placeholder="username/repository">
+        </div>
+
+        <div class="test-connection-wrapper">
+          <button id="test-connection-btn" class="btn btn-secondary">Test Connection</button>
+          <span id="test-status"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Sync Preferences</h2>
+        
+        <div class="form-group">
+          <label for="folder-structure">Folder Structure</label>
+          <select id="folder-structure">
+            <option value="Difficulty">Difficulty (e.g. Medium/two-sum_v1.cpp)</option>
+            <option value="Topic">Topic (e.g. Array/two-sum_v1.cpp)</option>
+            <option value="Language">Language (e.g. python/two-sum_v1.py)</option>
+            <option value="Number">Number (e.g. 0001/two-sum_v1.cpp)</option>
+            <option value="Flat">Flat (e.g. two-sum_v1.cpp)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="version-mode">Version Mode</label>
+          <select id="version-mode">
+            <option value="versioned">Versioned (Keep all submissions: _v1, _v2)</option>
+            <option value="overwrite">Overwrite (Replace the same file each time)</option>
+          </select>
+          <small>Versioned keeps a full history of your submissions as separate files. Overwrite updates a single file in place to reduce clutter.</small>
+        </div>
+      </section>
+
+      <div class="actions">
+        <span id="save-status"></span>
+        <button id="save-btn" class="btn btn-primary">Save Settings</button>
+      </div>
+    </main>
+  </div>
+  <div id="setup-modal" class="modal">
+    <div class="modal-content setup-modal-content">
+      <span class="modal-close" id="setup-modal-close">&times;</span>
+      <h2>How to Configure CommitCode</h2>
+      
+      <ol>
+        <li>
+          <strong>Create a NEW, empty repository</strong> specifically for CommitCode (e.g. <code>leetcode-solutions</code>). 
+          Do NOT point it at an existing personal repo. CommitCode will write files directly into the repo root or configured folders and could clutter or conflict with existing content.
+        </li>
+        <li>
+          Generate a correctly-scoped fine-grained Personal Access Token (PAT):
+          <ul>
+            <li>Click on your GitHub profile and go to <strong>Settings</strong>.<br><img src="./assets/Settings.png" class="instruction-img"></li>
+            <li>Under access, click <strong>Credentials</strong>.<br><img src="./assets/Credentials.png" class="instruction-img"></li>
+            <li>Click on <strong>"Fine-grained personal access token"</strong>.<br><img src="./assets/PAT.png" class="instruction-img"></li>
+            <li>Click on <strong>"Generate new token"</strong>.<br><img src="./assets/Generate New Token.png" class="instruction-img"></li>
+            <li>Enter a token name, like <code>commitcode token</code>.</li>
+            <li>Under <strong>Expiration date</strong>, you can set it to no expiration, otherwise after expiry you'll have to manually change it.</li>
+            <li>Under <strong>Repository access</strong>, click <strong>"Only select repositories"</strong> and then select the newly created repo.<br><img src="./assets/Select Repository Access.png" class="instruction-img"></li>
+            <li>Under <strong>Permissions</strong>, click <strong>"Add Permissions"</strong>, and add <strong>"Contents"</strong>.<br><img src="./assets/Content Permission.png" class="instruction-img"></li>
+            <li>Change access of contents from read only to <strong>"read and write"</strong>. <strong>Every other permission should stay at "No access"</strong>.<br><img src="./assets/Read and Write.png" class="instruction-img"></li>
+            <li>Click on <strong>Generate token</strong>, and copy the token (it can be seen only once).</li>
+          </ul>
+        </li>
+        <li>
+          Paste the token in the PAT section below, and write the repo name in the Repository field in the format: <code>username/repo-name</code>.
+        </li>
+        <li>
+          Click <strong>"Test Connection"</strong> before saving, then select your sync preferences.
+        </li>
+      </ol>
+      <div class="security-note">
+        <strong>Security Note:</strong> Your token is stored locally on your device via <code>chrome.storage.local</code>. It is never transmitted anywhere except directly to GitHub's API. This relies on your OS's disk encryption rather than any custom encryption by CommitCode.
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>
