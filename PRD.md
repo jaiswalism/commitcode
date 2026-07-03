@@ -259,13 +259,11 @@ Users can change repository, disconnect repository, or switch repositories.
 
 # 8. V1.5 / V2 Features
 
-## Import Existing History
+## Import Existing History (Moved to V1)
 
 Fetch all past accepted submissions and upload them retroactively, using the same `_v1`, `_v2` suffix scheme for any problem with multiple historical submissions.
 
-*(Deferred from V1 — not required to prove the core detect → commit → README loop; adds meaningfully to initial scope and GitHub API load.)*
-
-## Multi Platform
+## Multi Platform (Moved to V1)
 
 LeetCode, GeeksforGeeks, Codeforces, CodeChef, HackerRank, AtCoder
 
@@ -424,9 +422,9 @@ Repository, Folder Structure, README, Commit Template, Retry Queue, Advanced
 
 # 16. Roadmap
 
-**V1** — LeetCode, GitHub Sync, README, PAT, Logs, Retry Queue, Duplicate Detection, Version History (`_v1`/`_v2` suffixing)
+**V1** — LeetCode, GitHub Sync, README, PAT, Logs, Retry Queue, Duplicate Detection, Version History, Import Existing History, Multi Platform (GeeksForGeeks, HackerRank)
 
-**V1.5 / V2** — Import Existing History, Multiple Platforms, Statistics Dashboard, Study Notes, Revision Planner, Multi-language Solutions, AI Explanation
+**V1.5 / V2** — Statistics Dashboard, Study Notes, Revision Planner, Multi-language Solutions, AI Explanation
 
 **V3 (not scoped)** — Plugin Marketplace, Self-hosted Sync, VS Code Companion, Mobile Companion — revisit after V2 ships, no commitments made in this document.
 

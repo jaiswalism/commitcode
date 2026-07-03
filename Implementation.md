@@ -114,7 +114,23 @@ Go back through Phases 2–7 and make sure every case in the PRD's error table i
 
 ---
 
-## Phase 11 — QA Pass
+## Phase 11 — Sync Past Submissions
+
+1. Implement GraphQL/API scraping to fetch all previously "Accepted" submissions from LeetCode.
+2. Inject scraping script into a foreground tab to securely use CSRF cookies.
+3. Batch queue these historical solutions through the `sync-engine` to prevent duplicate spam and handle rate limiting gracefully.
+
+---
+
+## Phase 12 — Multi Platform Support
+
+1. Refactor or extend `PlatformAdapter` to handle sites like GeeksForGeeks or HackerRank.
+2. Implement specific `GeeksForGeeksAdapter` including DOM observation and code extraction.
+3. Update Options UI so users can select which platforms to sync from.
+
+---
+
+## Phase 13 — QA Pass
 
 1. Manual test matrix: multiple languages, all 3 difficulties, all 4 folder structures, re-submission (duplicate + version-bump paths), rate-limit simulation (mock 403 response), token revocation mid-session.
 2. Memory/perf sanity check — nothing in this PRD's original targets was load-bearing, but do confirm the popup doesn't lag and the content script isn't leaking listeners on SPA navigation (LeetCode is a SPA — watch for content script re-injection issues across problem navigations).
@@ -122,7 +138,7 @@ Go back through Phases 2–7 and make sure every case in the PRD's error table i
 
 ---
 
-## Phase 12 — Chrome Web Store Packaging
+## Phase 14 — Chrome Web Store Packaging
 
 1. Write the store listing emphasizing the security model (fine-grained PAT, single repo, no OAuth, no telemetry) — this is your actual differentiator, lead with it.
 2. Privacy policy page (even a static one) — required for Web Store listing, and directly reinforces the trust positioning from your Guiding Philosophy section.
@@ -142,11 +158,13 @@ Phase 4  → sync engine (joins 1+2+3)
 Phase 5  → README generator
 Phase 6  → commit templating
 Phase 7  → retry queue
-Phase 8  → popup UI
-Phase 9  → options page
-Phase 10 → error handling pass
-Phase 11 → QA
-Phase 12 → Web Store packaging
+Phase 8  → GitHub Actions CI
+Phase 9  → popup UI
+Phase 10 → options page
+Phase 11 → sync past submissions
+Phase 12 → multi platform support
+Phase 13 → error handling & QA
+Phase 14 → Web Store packaging
 ```
 
 Phases 2 and 3 can be built in parallel (or in either order) since neither depends on the other — they only meet at Phase 4. Everything from Phase 5 onward is strictly sequential.

@@ -27,7 +27,8 @@
 - [x] Phase 5: README Generator (`src/github/readme-generator.ts`)
 - [x] Phase 6: Commit Templating & Batched Commits via Git Database API
 - [x] Phase 7: Retry Queue & Popup Dashboard Management
-- [x] Phase 8 & 9: Popup UI and Options Page (`src/popup`, `src/options`)
+- [x] Phase 8: GitHub Actions CI/CD Release Pipeline
+- [x] Phase 9 & 10: Popup UI and Options Page (`src/popup`, `src/options`)
 - [x] Rebranding & Git History Rewrite: Renamed project to CommitCode, rebuilt Git history, expanded `README.md`.
 ### Details
 **Phase 4: Sync Engine**

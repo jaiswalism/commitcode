@@ -14,6 +14,8 @@
   - By Language (`javascript/1-two-sum.js`)
   - Flat structure
 - **Duplicate Detection**: Intelligently hashes your code to prevent spamming your repo with identical submissions if you click "Submit" multiple times.
+- **Offline Retry Queue**: If your internet drops or GitHub's API rate limits you, your submissions are safely stored in a local queue and automatically retried later.
+- **Popup Dashboard**: Click the extension icon to view your sync status, see detailed logs, and manage any pending commits directly from the queue.
 - **Smart Versioning**: Optionally keep a history of your attempts (e.g., `_v1`, `_v2`) or choose to overwrite them in place.
 - **Auto-generated README**: Automatically maintains a markdown table and difficulty stats right in your repository.
 - **File Headers**: Automatically prepends metadata (Title, Difficulty, Runtime, Memory, LeetCode URL) to every uploaded file.
