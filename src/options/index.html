@@ -5,114 +5,215 @@
   <title>CommitCode Options</title>
   <link rel="stylesheet" href="./index.css">
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CommitCode Settings</h1>
-      <p>Configure your GitHub connection and synchronization preferences.</p>
+<body class="relative">
+  <!-- Subtle background texture -->
+  <div class="fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.05)_0%,transparent_50%)] z-0 pointer-events-none"></div>
+  
+  <div class="relative z-10 max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-20 flex flex-col min-h-screen">
+    
+    <header class="mb-16">
+      <div class="flex items-center gap-2 text-xs text-zinc-500 mb-8 font-mono tracking-wide uppercase">
+        <span class="w-1.5 h-1.5 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+        <span>CommitCode Settings</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-normal leading-tight text-zinc-100 max-w-xl">
+        Configure your <em class="font-serif italic text-blue-400">Connection</em> and <em class="font-serif italic text-blue-400">Preferences</em>.
+      </h1>
     </header>
 
-    <main>
-      <section class="card">
-        <h2>GitHub Connection</h2>
-
-        <button id="open-setup-modal" class="btn btn-secondary" style="margin-bottom: 20px; width: 100%;">ℹ️ How to configure CommitCode (Setup Guide)</button>
-        
-        <div class="form-group">
-          <label for="pat">Personal Access Token (PAT)</label>
-          <input type="password" id="pat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-          <small>Needs <strong>Contents: Read and write</strong> permission on a fine-grained token. Stored securely in local storage.</small>
+    <main class="flex-grow space-y-12">
+      <!-- Section: GitHub Connection -->
+      <section class="bg-zinc-900/40 ring-1 ring-white/10 p-8 rounded-sm backdrop-blur-sm">
+        <div class="mb-8">
+          <h2 class="text-xl font-normal text-zinc-100 mb-1">GitHub Connection</h2>
+          <p class="text-sm text-zinc-400">Manage your Personal Access Token and target repository.</p>
         </div>
 
-        <div class="form-group">
-          <label for="repo">Repository</label>
-          <input type="text" id="repo" placeholder="username/repository">
+        <div class="bg-blue-500/10 border border-blue-500/20 rounded-sm p-4 md:p-5 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-sm text-blue-100 font-medium mb-1">Need help configuring CommitCode?</h3>
+            <p class="text-xs text-blue-200/70 leading-relaxed max-w-lg">Follow our step-by-step setup guide to securely generate a GitHub token with the correct permissions and link your repository.</p>
+          </div>
+          <button id="open-setup-modal" class="whitespace-nowrap bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2.5 rounded-sm transition-colors shadow-[0_0_15px_rgba(37,99,235,0.15)] focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+            View Setup Guide
+          </button>
         </div>
 
-        <div class="test-connection-wrapper">
-          <button id="test-connection-btn" class="btn btn-secondary">Test Connection</button>
-          <span id="test-status"></span>
-        </div>
-      </section>
+        <div class="space-y-6 max-w-xl">
+          <div>
+            <label for="pat" class="block text-xs text-zinc-400 mb-2 font-mono">Personal Access Token (PAT)</label>
+            <input type="password" id="pat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" 
+              class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+            <p class="mt-2 text-xs text-zinc-400">Needs <strong class="text-zinc-300 font-medium">Contents: Read and write</strong> on a fine-grained token.</p>
+          </div>
 
-      <section class="card">
-        <h2>Sync Preferences</h2>
-        
-        <div class="form-group">
-          <label for="folder-structure">Folder Structure</label>
-          <select id="folder-structure">
-            <option value="Difficulty">Difficulty (e.g. Medium/two-sum_v1.cpp)</option>
-            <option value="Topic">Topic (e.g. Array/two-sum_v1.cpp)</option>
-            <option value="Language">Language (e.g. python/two-sum_v1.py)</option>
-            <option value="Number">Number (e.g. 0001/two-sum_v1.cpp)</option>
-            <option value="Flat">Flat (e.g. two-sum_v1.cpp)</option>
-          </select>
-        </div>
+          <div>
+            <label for="repo" class="block text-xs text-zinc-400 mb-2 font-mono">Repository Name</label>
+            <input type="text" id="repo" placeholder="username/repository" 
+              class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+          </div>
 
-        <div class="form-group">
-          <label for="version-mode">Version Mode</label>
-          <select id="version-mode">
-            <option value="versioned">Versioned (Keep all submissions: _v1, _v2)</option>
-            <option value="overwrite">Overwrite (Replace the same file each time)</option>
-          </select>
-          <small>Versioned keeps a full history of your submissions as separate files. Overwrite updates a single file in place to reduce clutter.</small>
+          <div class="flex items-center gap-4 pt-2">
+            <button id="test-connection-btn" class="bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-4 py-2 text-xs transition-colors rounded-sm">
+              Test Connection
+            </button>
+            <span id="test-status" class="text-xs font-mono"></span>
+          </div>
         </div>
       </section>
 
-      <section class="card">
-        <h2>Commit Settings</h2>
-        <div class="form-group">
-          <label for="commit-template">Commit Message Template</label>
-          <textarea id="commit-template" rows="4"></textarea>
-          <small>
-            Variables: <code>{title}</code>, <code>{difficulty}</code>, <code>{language}</code>, <code>{runtime}</code>, <code>{memory}</code>, <code>{id}</code>.
-          </small>
+      <!-- Section: Sync Preferences -->
+      <section class="bg-zinc-900/40 ring-1 ring-white/10 p-8 rounded-sm backdrop-blur-sm">
+        <h2 class="text-xl font-normal text-zinc-100 mb-1">Sync Preferences</h2>
+        <p class="text-sm text-zinc-400 mb-6">How your code is organized and updated in your repository.</p>
+
+        <div class="space-y-6 max-w-xl">
+          <div>
+            <label for="folder-structure" class="block text-xs text-zinc-400 mb-2 font-mono">Folder Structure</label>
+            <select id="folder-structure" class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+              <option value="Difficulty" class="bg-zinc-900 text-zinc-200">Difficulty (e.g. Medium/two-sum_v1.cpp)</option>
+              <option value="Topic" class="bg-zinc-900 text-zinc-200">Topic (e.g. Array/two-sum_v1.cpp)</option>
+              <option value="Language" class="bg-zinc-900 text-zinc-200">Language (e.g. python/two-sum_v1.py)</option>
+              <option value="Number" class="bg-zinc-900 text-zinc-200">Number (e.g. 0001/two-sum_v1.cpp)</option>
+              <option value="Flat" class="bg-zinc-900 text-zinc-200">Flat (e.g. two-sum_v1.cpp)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="version-mode" class="block text-xs text-zinc-400 mb-2 font-mono">Version Mode</label>
+            <select id="version-mode" class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+              <option value="versioned" class="bg-zinc-900 text-zinc-200">Versioned (Keep all submissions: _v1, _v2)</option>
+              <option value="overwrite" class="bg-zinc-900 text-zinc-200">Overwrite (Replace the same file each time)</option>
+            </select>
+            <p class="mt-2 text-xs text-zinc-400">Versioned keeps history. Overwrite updates a single file to reduce clutter.</p>
+          </div>
         </div>
       </section>
 
-      <div class="actions">
-        <span id="save-status"></span>
-        <button id="save-btn" class="btn btn-primary">Save Settings</button>
+      <!-- Section: Commit Settings -->
+      <section class="bg-zinc-900/40 ring-1 ring-white/10 p-8 rounded-sm backdrop-blur-sm">
+        <h2 class="text-xl font-normal text-zinc-100 mb-1">Commit Settings</h2>
+        <p class="text-sm text-zinc-400 mb-6">Customize the commit message generated by the extension.</p>
+
+        <div class="space-y-6 max-w-xl">
+          <div>
+            <label for="commit-template" class="block text-xs text-zinc-400 mb-2 font-mono">Commit Message Template</label>
+            <textarea id="commit-template" rows="4" class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow font-mono"></textarea>
+            <p class="mt-3 text-xs text-zinc-400 leading-relaxed">
+              Available variables: <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{title}</code>, <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{difficulty}</code>, <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{language}</code>, <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{runtime}</code>, <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{memory}</code>, <code class="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300 font-mono">{id}</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Save Actions -->
+      <div class="flex items-center gap-6 pt-4">
+        <button id="save-btn" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 px-8 py-3 text-sm font-medium transition-colors rounded-sm shadow-[0_0_15px_rgba(37,99,235,0.2)]">
+          Save Settings
+        </button>
+        <span id="save-status" class="text-sm font-mono"></span>
       </div>
     </main>
+
+    <footer class="mt-24 font-mono text-[0.65rem] text-zinc-600 border-t border-zinc-800 pt-6 flex justify-between">
+      <span>CommitCode <span id="app-version">v1.0.0</span></span>
+      <span>Privacy-first <a href="https://github.com/jaiswalism/commitcode" target="_blank" class="hover:text-zinc-400 transition-colors underline decoration-zinc-700 underline-offset-2">open source</a> extension</span>
+    </footer>
   </div>
-  <div id="setup-modal" class="modal">
-    <div class="modal-content setup-modal-content">
-      <span class="modal-close" id="setup-modal-close">&times;</span>
-      <h2>How to Configure CommitCode</h2>
+
+  <!-- Setup Modal Overlay -->
+  <div id="setup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-zinc-950 border border-zinc-800 max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-sm relative shadow-2xl">
+      <button id="setup-modal-close" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
       
-      <ol>
-        <li>
-          <strong>Create a NEW, empty repository</strong> specifically for CommitCode (e.g. <code>leetcode-solutions</code>). 
-          Do NOT point it at an existing personal repo. CommitCode will write files directly into the repo root or configured folders and could clutter or conflict with existing content.
-        </li>
-        <li>
-          Generate a correctly-scoped fine-grained Personal Access Token (PAT):
-          <ul>
-            <li>Click on your GitHub profile and go to <strong>Settings</strong>.<br><img src="./assets/Settings.png" class="instruction-img"></li>
-            <li>Under access, click <strong>Credentials</strong>.<br><img src="./assets/Credentials.png" class="instruction-img"></li>
-            <li>Click on <strong>"Fine-grained personal access token"</strong>.<br><img src="./assets/PAT.png" class="instruction-img"></li>
-            <li>Click on <strong>"Generate new token"</strong>.<br><img src="./assets/Generate New Token.png" class="instruction-img"></li>
-            <li>Enter a token name, like <code>commitcode token</code>.</li>
-            <li>Under <strong>Expiration date</strong>, you can set it to no expiration, otherwise after expiry you'll have to manually change it.</li>
-            <li>Under <strong>Repository access</strong>, click <strong>"Only select repositories"</strong> and then select the newly created repo.<br><img src="./assets/Select Repository Access.png" class="instruction-img"></li>
-            <li>Under <strong>Permissions</strong>, click <strong>"Add Permissions"</strong>, and add <strong>"Contents"</strong>.<br><img src="./assets/Content Permission.png" class="instruction-img"></li>
-            <li>Change access of contents from read only to <strong>"read and write"</strong>. <strong>Every other permission should stay at "No access"</strong>.<br><img src="./assets/Read and Write.png" class="instruction-img"></li>
-            <li>Click on <strong>Generate token</strong>, and copy the token (it can be seen only once).</li>
-          </ul>
-        </li>
-        <li>
-          Paste the token in the PAT section below, and write the repo name in the Repository field in the format: <code>username/repo-name</code>.
-        </li>
-        <li>
-          Click <strong>"Test Connection"</strong> before saving, then select your sync preferences.
-        </li>
-      </ol>
-      <div class="security-note">
-        <strong>Security Note:</strong> Your token is stored locally on your device via <code>chrome.storage.local</code>. It is never transmitted anywhere except directly to GitHub's API. This relies on your OS's disk encryption rather than any custom encryption by CommitCode.
+      <div class="p-8 md:p-10">
+        <h2 class="text-2xl font-normal text-zinc-100 mb-6">How to Configure CommitCode</h2>
+        
+        <div class="space-y-12">
+          
+          <!-- Step 1 -->
+          <div class="flex gap-4 sm:gap-6 relative">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-sm font-bold z-10">1</div>
+            <!-- Vertical Line -->
+            <div class="absolute left-4 top-10 bottom-[-3rem] w-px bg-zinc-800 -translate-x-1/2"></div>
+            
+            <div class="flex-grow pt-1">
+              <h3 class="text-zinc-100 font-medium text-lg mb-2">Create an empty repository</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed mb-4">Create a brand new repository specifically for CommitCode (e.g. <code class="bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-zinc-300 font-mono text-xs">leetcode-solutions</code>). Do NOT point it at an existing personal repo.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-4 sm:gap-6 relative">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-sm font-bold z-10">2</div>
+            <!-- Vertical Line -->
+            <div class="absolute left-4 top-10 bottom-[-3rem] w-px bg-zinc-800 -translate-x-1/2"></div>
+            
+            <div class="flex-grow pt-1">
+              <h3 class="text-zinc-100 font-medium text-lg mb-2">Generate a Fine-grained PAT</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed mb-6">Create a Personal Access Token so the extension can safely write to your new repository.</p>
+              
+              <div class="space-y-6">
+                <!-- Sub step A -->
+                <div class="bg-zinc-900/40 border border-zinc-800/60 rounded-sm p-4">
+                  <p class="text-sm text-zinc-300 mb-3"><span class="text-zinc-500 font-mono mr-2">A.</span>Go to <strong>Settings</strong> > <strong>Credentials</strong> > <strong>Fine-grained personal access token</strong> and click <strong>Generate new token</strong>.</p>
+                  <div class="flex gap-2 overflow-x-auto pb-2 snap-x">
+                    <img src="./assets/Settings.png" class="cursor-zoom-in snap-start rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="./assets/Credentials.png" class="cursor-zoom-in snap-start rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="./assets/PAT.png" class="cursor-zoom-in snap-start rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="./assets/Generate New Token.png" class="cursor-zoom-in snap-start rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                  </div>
+                </div>
+
+                <!-- Sub step B -->
+                <div class="bg-zinc-900/40 border border-zinc-800/60 rounded-sm p-4">
+                  <p class="text-sm text-zinc-300 mb-3"><span class="text-zinc-500 font-mono mr-2">B.</span>Under <strong>Repository access</strong>, select <strong>"Only select repositories"</strong> and choose your new repo.</p>
+                  <img src="./assets/Select Repository Access.png" class="cursor-zoom-in rounded border border-zinc-700/50 max-h-32 opacity-80 hover:opacity-100 transition-opacity">
+                </div>
+
+                <!-- Sub step C -->
+                <div class="bg-zinc-900/40 border border-zinc-800/60 rounded-sm p-4">
+                  <p class="text-sm text-zinc-300 mb-3"><span class="text-zinc-500 font-mono mr-2">C.</span>Under <strong>Permissions</strong>, give <strong>Contents</strong> access to <strong>Read and write</strong>. Click Generate.</p>
+                  <div class="flex gap-2 overflow-x-auto pb-2">
+                    <img src="./assets/Content Permission.png" class="cursor-zoom-in rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="./assets/Read and Write.png" class="cursor-zoom-in rounded border border-zinc-700/50 h-32 object-cover opacity-80 hover:opacity-100 transition-opacity">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-4 sm:gap-6">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-sm font-bold z-10">3</div>
+            
+            <div class="flex-grow pt-1">
+              <h3 class="text-zinc-100 font-medium text-lg mb-2">Connect and Verify</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">Paste the token and your repo (format: <code class="bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-zinc-300 font-mono text-xs">username/repo-name</code>) into the fields, and click <strong>Test Connection</strong> to verify.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-8 bg-zinc-900/50 border border-zinc-800 p-4 rounded-sm">
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            <strong class="text-zinc-300">Security Note:</strong> Your token is stored locally on your device via Chrome's local storage. It is never transmitted anywhere except directly to GitHub's API.
+          </p>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Lightbox Overlay -->
+  <div id="lightbox" class="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+    <button id="lightbox-close" class="absolute top-6 right-6 text-zinc-400 hover:text-white p-2 focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] rounded-sm shadow-2xl object-contain">
+  </div>
+
   <script type="module" src="./index.ts"></script>
 </body>
 </html>

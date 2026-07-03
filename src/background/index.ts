@@ -65,7 +65,10 @@ export function injectFetchInterceptorInMainWorld() {
   };
 }
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/onboarding/index.html') });
+  }
   chrome.alarms.create('retryQueueAlarm', { periodInMinutes: 5 });
 });
 

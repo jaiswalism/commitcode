@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to CommitCode</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="flex items-center justify-center min-h-screen relative">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.08)_0%,transparent_50%)] z-0 pointer-events-none"></div>
+  <div class="relative z-10 w-full max-w-3xl h-full flex flex-col p-8 md:p-16 box-border">
+    
+    <header class="flex justify-between items-center text-xs text-zinc-500 mt-4 mb-16 tracking-wide font-mono">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+        <span class="lowercase">commitcode</span>
+      </div>
+      <div>
+        <span id="current-step" class="text-zinc-300">1</span> / 3
+      </div>
+    </header>
+
+    <main class="flex-grow flex flex-col justify-center relative">
+      
+      <!-- Step 1: Welcome -->
+      <section id="step-1" class="step active text-left">
+        <div class="text-[0.65rem] font-bold tracking-[0.2em] text-blue-500 mb-6 uppercase">Welcome</div>
+        <h1 class="text-4xl md:text-5xl font-normal leading-tight mb-6 max-w-xl text-zinc-100">
+          Sync your LeetCode to <em class="font-serif italic text-blue-400">GitHub</em>.
+        </h1>
+        <p class="text-lg text-zinc-400 max-w-lg mb-10 leading-relaxed">
+          CommitCode is a privacy-first extension that automatically syncs your accepted coding problem submissions to GitHub. It lives quietly in the background—no OAuth, no telemetry.
+        </p>
+        
+        <div class="bg-zinc-900/50 ring-1 ring-white/10 p-8 mb-10 max-w-md backdrop-blur-md rounded-sm">
+          <div class="font-serif text-5xl italic leading-none mb-3 text-zinc-100">100<span class="text-2xl font-sans not-italic text-zinc-500 ml-1">%</span></div>
+          <div class="font-mono text-xs text-zinc-500">privacy &middot; zero external servers &middot; fine-grained access</div>
+        </div>
+
+        <button id="btn-next-1" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 px-6 py-2.5 text-sm font-medium transition-colors rounded-sm inline-flex items-center gap-2">
+          Get started &rarr;
+        </button>
+      </section>
+
+      <!-- Step 2: Setup -->
+      <section id="step-2" class="step text-left">
+        <div class="text-[0.65rem] font-bold tracking-[0.2em] text-blue-500 mb-6 uppercase">Setup</div>
+        <h1 class="text-4xl md:text-5xl font-normal leading-tight mb-6 max-w-xl text-zinc-100">
+          Connect your <em class="font-serif italic text-blue-400">Repository</em>.
+        </h1>
+        <p class="text-lg text-zinc-400 max-w-lg mb-10 leading-relaxed">
+          We use a fine-grained Personal Access Token (PAT) so we only get access to a single repository of your choice.
+        </p>
+        
+        <div class="bg-zinc-900/50 ring-1 ring-white/10 p-8 mb-10 max-w-md backdrop-blur-md rounded-sm">
+          <div class="mb-5">
+            <label for="pat" class="block text-xs text-zinc-400 mb-2 font-mono">Personal Access Token</label>
+            <input type="password" id="pat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" 
+              class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+          </div>
+          <div class="mb-6">
+            <label for="repo" class="block text-xs text-zinc-400 mb-2 font-mono">Repository Name</label>
+            <input type="text" id="repo" placeholder="username/leetcode-solutions" 
+              class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+          </div>
+          <div class="flex items-center gap-4">
+            <button id="btn-test" class="bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-4 py-2 text-xs transition-colors rounded-sm">
+              Test Connection
+            </button>
+            <span id="test-status" class="text-xs font-mono text-emerald-400"></span>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button id="btn-next-2" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 px-6 py-2.5 text-sm font-medium transition-colors rounded-sm inline-flex items-center gap-2">
+            Continue &rarr;
+          </button>
+          <button id="btn-skip-2" class="text-zinc-400 hover:text-zinc-200 px-4 py-2.5 text-sm font-medium transition-colors">
+            I'll do this later
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 3: Preferences -->
+      <section id="step-3" class="step text-left">
+        <div class="text-[0.65rem] font-bold tracking-[0.2em] text-blue-500 mb-6 uppercase">Preferences</div>
+        <h1 class="text-4xl md:text-5xl font-normal leading-tight mb-6 max-w-xl text-zinc-100">
+          How should we <em class="font-serif italic text-blue-400">organize</em>?
+        </h1>
+        <p class="text-lg text-zinc-400 max-w-lg mb-10 leading-relaxed">
+          Choose how you want your code organized in your repository. We can sort by difficulty, topic, language, or just keep it flat.
+        </p>
+        
+        <div class="bg-zinc-900/50 ring-1 ring-white/10 p-8 mb-10 max-w-md backdrop-blur-md rounded-sm">
+          <div class="mb-2">
+            <label for="folder-structure" class="block text-xs text-zinc-400 mb-2 font-mono">Folder Structure</label>
+            <select id="folder-structure" 
+              class="w-full bg-black/40 border border-zinc-800 rounded-sm px-4 py-2.5 text-zinc-200 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-shadow">
+              <option value="Difficulty" class="bg-zinc-900 text-zinc-200">Difficulty (e.g. Medium/two-sum_v1.cpp)</option>
+              <option value="Topic" class="bg-zinc-900 text-zinc-200">Topic (e.g. Array/two-sum_v1.cpp)</option>
+              <option value="Language" class="bg-zinc-900 text-zinc-200">Language (e.g. python/two-sum_v1.py)</option>
+              <option value="Number" class="bg-zinc-900 text-zinc-200">Number (e.g. 0001/two-sum_v1.cpp)</option>
+              <option value="Flat" class="bg-zinc-900 text-zinc-200">Flat (e.g. two-sum_v1.cpp)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="btn-finish" class="bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/50 px-6 py-2.5 text-sm font-medium transition-colors rounded-sm inline-flex items-center gap-2">
+          Complete Setup &rarr;
+        </button>
+      </section>
+
+    </main>
+
+    <footer class="mt-16 font-mono text-[0.65rem] text-zinc-600">
+      <span id="app-version">v1.0.0</span> <span>&middot; <a href="https://github.com/jaiswalism/commitcode" target="_blank" class="hover:text-zinc-400 transition-colors underline decoration-zinc-700 underline-offset-2">open source</a></span>
+    </footer>
+  </div>
+  <script type="module" src="index.ts"></script>
+</body>
+</html>

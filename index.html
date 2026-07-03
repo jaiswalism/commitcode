@@ -4,100 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CommitCode Popup</title>
-    <style>
-      body {
-        width: 300px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding: 20px;
-        margin: 0;
-        background-color: #111;
-        color: #f0f0f0;
-        text-align: center;
-      }
-      h2 {
-        margin-top: 0;
-      }
-      button {
-        background-color: #0070f3;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 20px;
-      }
-      button:hover {
-        background-color: #0051a2;
-      }
-      .queue-container {
-        margin-top: 20px;
-        text-align: left;
-        background: #222;
-        padding: 10px;
-        border-radius: 6px;
-        max-height: 200px;
-        overflow-y: auto;
-      }
-      .queue-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #333;
-        font-size: 13px;
-      }
-      .queue-item:last-child {
-        border-bottom: none;
-      }
-      .queue-item-info {
-        display: flex;
-        flex-direction: column;
-      }
-      .queue-item-reason {
-        font-size: 11px;
-        color: #888;
-      }
-      .queue-actions {
-        display: flex;
-        gap: 5px;
-      }
-      .icon-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        font-size: 14px;
-        border-radius: 4px;
-        margin: 0;
-        opacity: 0.8;
-      }
-      .icon-btn:hover {
-        opacity: 1;
-        background-color: #333;
-      }
-      .btn-delete {
-        color: #ff5252;
-      }
-      .btn-sync {
-        color: #4caf50;
-      }
-    </style>
+    <link rel="stylesheet" href="/src/popup/index.css">
   </head>
-  <body>
-    <div id="app">
-      <h2>CommitCode</h2>
-      <p>Your submissions sync automatically in the background.</p>
+  <body class="w-[320px] bg-zinc-950 text-zinc-200 antialiased relative overflow-hidden font-sans border border-zinc-800 m-0 p-0">
+    <!-- Background texture -->
+    <div class="fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.08)_0%,transparent_60%)] z-0 pointer-events-none"></div>
+
+    <div class="relative z-10 p-5 flex flex-col h-full">
+      <!-- Header -->
+      <div class="flex items-center gap-2 mb-4">
+        <img src="/public/logo.png" alt="CommitCode" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
+        <h2 class="text-lg font-medium text-zinc-100 tracking-wide m-0">CommitCode</h2>
+      </div>
       
-      <div class="queue-container">
-        <h4 style="margin: 0 0 10px 0;">Pending Commits</h4>
-        <div id="queue-list">
-          <div style="font-size: 13px; color: #888; text-align: center;">Loading...</div>
+      <p class="text-xs text-zinc-400 mb-5 leading-relaxed m-0">Your successful submissions are synced automatically.</p>
+      
+      <!-- Queue Container -->
+      <div class="bg-zinc-900/50 border border-zinc-800/80 rounded-md p-4 mb-5 shadow-inner">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-xs font-mono text-zinc-300 uppercase tracking-wider m-0">Pending Queue</h4>
+          <span id="queue-count" class="bg-blue-500/20 text-blue-400 text-[10px] px-1.5 py-0.5 rounded font-bold">0</span>
+        </div>
+        
+        <div id="queue-list" class="max-h-[160px] overflow-y-auto pr-1 -mr-1 space-y-2 custom-scrollbar">
+          <div class="text-xs text-zinc-500 text-center py-4 font-mono italic">Loading...</div>
         </div>
       </div>
 
-      <button id="open-options">Open Settings</button>
+      <!-- Footer Action -->
+      <button id="open-options" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2.5 rounded-sm transition-colors shadow-[0_0_10px_rgba(37,99,235,0.1)] focus:outline-none focus:ring-2 focus:ring-blue-500/50 flex items-center justify-center gap-2 cursor-pointer border-none m-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        Preferences
+      </button>
     </div>
     <script type="module" src="/src/popup/index.ts"></script>
   </body>

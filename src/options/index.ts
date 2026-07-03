@@ -19,17 +19,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   const setupModalClose = document.getElementById('setup-modal-close') as HTMLSpanElement;
 
   const openSetupModal = () => {
-    setupModal.style.display = 'flex';
+    setupModal.classList.remove('opacity-0', 'pointer-events-none');
+    setupModal.classList.add('opacity-100');
   };
 
   const closeSetupModal = () => {
-    setupModal.style.display = 'none';
+    setupModal.classList.remove('opacity-100');
+    setupModal.classList.add('opacity-0', 'pointer-events-none');
   };
 
   setupModalBtn.addEventListener('click', openSetupModal);
   setupModalClose.addEventListener('click', closeSetupModal);
   setupModal.addEventListener('click', (e) => {
     if (e.target === setupModal) closeSetupModal();
+  });
+
+  // Lightbox Logic
+  const lightbox = document.getElementById('lightbox') as HTMLDivElement;
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxClose = document.getElementById('lightbox-close') as HTMLButtonElement;
+
+  const openLightbox = (src: string) => {
+    lightboxImg.src = src;
+    lightbox.classList.remove('opacity-0', 'pointer-events-none');
+    lightbox.classList.add('opacity-100');
+  };
+
+  const closeLightbox = () => {
+    lightbox.classList.remove('opacity-100');
+    lightbox.classList.add('opacity-0', 'pointer-events-none');
+    setTimeout(() => { lightboxImg.src = ''; }, 300);
+  };
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  const instructionImages = document.querySelectorAll('#setup-modal img');
+  instructionImages.forEach((img) => {
+    img.addEventListener('click', (e) => {
+      const src = (e.target as HTMLImageElement).src;
+      openLightbox(src);
+    });
   });
 
   const settings = await db.getSettings();
@@ -39,10 +71,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (settings.versionMode) versionModeSelect.value = settings.versionMode;
   if (settings.commitTemplate) commitTemplateInput.value = settings.commitTemplate;
 
-  // Auto-open modal if no PAT or repo is set
-  if (!settings.pat || !settings.repository) {
-    openSetupModal();
+  const versionEl = document.getElementById('app-version');
+  if (versionEl && chrome.runtime && chrome.runtime.getManifest) {
+    versionEl.textContent = `v${chrome.runtime.getManifest().version}`;
   }
+
+  // We no longer auto-open the modal on load.
 
   let connectionTestedAndPassed = false;
 

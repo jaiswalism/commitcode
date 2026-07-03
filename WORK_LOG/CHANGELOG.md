@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-07-03
+- Redesigned Onboarding, Options, and Popup UIs with a modern, premium glassmorphic dark theme using Tailwind CSS.
 - Rebranded extension from "LeetSync" to "CommitCode".
 - Created `LICENSE` and completely rewrote `README.md` with detailed, image-backed setup instructions.
 - Implemented Popup Dashboard and Options page (Phases 8 & 9) for user configuration.

@@ -92,14 +92,14 @@ The riskiest and most fragile part per your own Problem Statement — isolate it
 
 ---
 
-## Phase 9 — Options / Settings Page
+## Phase 9 & 10 — UI Polish and Error Handling
 
-1. Repository setup screen: PAT input, repo picker/confirm, "Test Connection" button (calls Phase 2's `testConnection`).
-2. Folder structure selector, commit template editor (Phase 6), README toggle.
-3. Repository manager: change/disconnect/switch repo.
-4. Persist all to `Settings` via Phase 1's storage wrapper.
+1. Redesigned the Options, Onboarding, and Popup pages with a modern glassmorphic dark theme.
+2. Added interactive Lightbox for setup guide images.
+3. Automatically fetch the manifest version for the UI footer.
+4. Error handling passes applied.
 
-**Checkpoint:** full first-run flow works end to end — install, enter PAT, pick repo, pick folder structure, solve a problem, see it synced, see it in the popup log.
+**Checkpoint:** Full first-run flow works end to end and looks beautiful. Ready for Phase 11.
 
 ---
 
