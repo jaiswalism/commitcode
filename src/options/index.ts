@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const repoInput = document.getElementById('repo') as HTMLInputElement;
   const folderStructureSelect = document.getElementById('folder-structure') as HTMLSelectElement;
   const versionModeSelect = document.getElementById('version-mode') as HTMLSelectElement;
+  const commitTemplateInput = document.getElementById('commit-template') as HTMLTextAreaElement;
 
   const testBtn = document.getElementById('test-connection-btn') as HTMLButtonElement;
   const testStatus = document.getElementById('test-status') as HTMLSpanElement;
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (settings.repository) repoInput.value = settings.repository;
   if (settings.folderStructure) folderStructureSelect.value = settings.folderStructure;
   if (settings.versionMode) versionModeSelect.value = settings.versionMode;
+  if (settings.commitTemplate) commitTemplateInput.value = settings.commitTemplate;
 
   // Auto-open modal if no PAT or repo is set
   if (!settings.pat || !settings.repository) {
@@ -108,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     repoInput.value = repo;
     const folderStructure = folderStructureSelect.value as FolderStructure;
     const versionMode = versionModeSelect.value as 'versioned' | 'overwrite';
+    const commitTemplate = commitTemplateInput.value.trim() || "Solved: {title}\nDifficulty: {difficulty}\nLanguage: {language}\nRuntime: {runtime}";
 
     const needsTest = (pat !== settings.pat || repo !== settings.repository);
     if (needsTest && !connectionTestedAndPassed) {
@@ -121,13 +124,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         pat,
         repository: repo,
         folderStructure,
-        versionMode
+        versionMode,
+        commitTemplate
       });
       
       settings.pat = pat;
       settings.repository = repo;
       settings.folderStructure = folderStructure;
       settings.versionMode = versionMode;
+      settings.commitTemplate = commitTemplate;
       
       showStatus(saveStatus, 'Settings saved successfully!');
     } catch (e: any) {

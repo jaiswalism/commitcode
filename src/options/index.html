@@ -59,6 +59,17 @@
         </div>
       </section>
 
+      <section class="card">
+        <h2>Commit Settings</h2>
+        <div class="form-group">
+          <label for="commit-template">Commit Message Template</label>
+          <textarea id="commit-template" rows="4"></textarea>
+          <small>
+            Variables: <code>{title}</code>, <code>{difficulty}</code>, <code>{language}</code>, <code>{runtime}</code>, <code>{memory}</code>, <code>{id}</code>.
+          </small>
+        </div>
+      </section>
+
       <div class="actions">
         <span id="save-status"></span>
         <button id="save-btn" class="btn btn-primary">Save Settings</button>

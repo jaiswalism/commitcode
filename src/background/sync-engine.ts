@@ -171,7 +171,13 @@ export class SyncEngine {
       // 4. Generate header comment and upload
       const headerComment = this.generateHeaderComment(problem);
       const fullCode = headerComment + problem.code;
-      const commitMsg = `Solved: ${problem.title} (${problem.difficulty})`;
+      let commitMsg = settings.commitTemplate;
+      commitMsg = commitMsg.replace(/{title}/g, problem.title);
+      commitMsg = commitMsg.replace(/{id}/g, problem.id);
+      commitMsg = commitMsg.replace(/{difficulty}/g, problem.difficulty);
+      commitMsg = commitMsg.replace(/{language}/g, problem.language);
+      commitMsg = commitMsg.replace(/{runtime}/g, problem.runtime || 'N/A');
+      commitMsg = commitMsg.replace(/{memory}/g, problem.memory || 'N/A');
       
       console.log(`[CommitCode] Uploading ${targetPath}...`);
       await client.putFile(targetPath, fullCode, commitMsg, shaToUpdate);

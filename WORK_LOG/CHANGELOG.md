@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-07-03
+- Rebranded extension from "LeetSync" to "CommitCode".
+- Created `LICENSE` and completely rewrote `README.md` with detailed, image-backed setup instructions.
+- Implemented Popup Dashboard and Options page (Phases 8 & 9) for user configuration.
+- Wired content scripts to the background service worker.
+
 ## 2026-07-02
 - Initialized CommitCode project scaffolding (Phase 0).
 - Set up Vite, `@crxjs/vite-plugin`, and TypeScript configuration.
@@ -17,7 +23,9 @@
 - [x] Phase 2: GitHub API Client (`src/github/client.ts`)
 - [x] Phase 3: LeetCode Platform Adapter (`src/platforms/leetcode`)
 - [x] Phase 4: Sync Engine (`src/background/sync-engine.ts`)
-
+- [x] Phase 5: README Generator (`src/github/readme-generator.ts`)
+- [x] Phase 8 & 9: Popup UI and Options Page (`src/popup`, `src/options`)
+- [x] Rebranding & Git History Rewrite: Renamed project to CommitCode, rebuilt Git history, expanded `README.md`.
 ### Details
 **Phase 4: Sync Engine**
 - Implemented `SyncEngine` with automatic problem code hashing (SHA-256) for duplicate detection.

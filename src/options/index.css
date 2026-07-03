@@ -91,18 +91,20 @@ label {
   color: #ccc;
 }
 
-input, select {
+input, select, textarea {
   background: #000;
   border: 1px solid var(--border);
   color: var(--text-main);
   padding: 12px;
   border-radius: 8px;
   font-size: 15px;
+  font-family: var(--font-family);
   outline: none;
   transition: border-color 0.2s ease;
+  resize: vertical;
 }
 
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
 }
 

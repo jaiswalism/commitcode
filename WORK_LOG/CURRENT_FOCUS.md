@@ -1,10 +1,6 @@
 # Current Focus
 
-Phase 4 — Sync Engine
-- Build `background/sync-engine.ts`.
-- Orchestrate data flow from Content Script -> Sync Engine -> GitHub.
-- Implement path resolution based on Settings.
-- Implement duplicate detection (hash code).
-- Implement version suffixing (`_vN`).
-- Call `github/client.ts`'s `putFile`.
-- Log success/failures using `storage/db.ts`.
+Phase 6 — Commit Templating
+- Implement customizable commit messages.
+- Allow users to define a template (e.g. `[{difficulty}] {title} ({runtime}, {memory})`).
+- Update `SyncEngine` to use this template when calling `github/client.ts` `putFile`.
