@@ -140,4 +140,74 @@ export class GitHubClient {
       throw e;
     }
   }
+
+  async commitFiles(files: {path: string, content: string}[], message: string): Promise<void> {
+    // 1. Get default branch
+    const repoInfoResponse = await this.fetchApi(`/repos/${this.repo}`);
+    const repoInfo = await repoInfoResponse.json();
+    const branchName = repoInfo.default_branch;
+
+    // 2. Get latest commit SHA on that branch
+    const refResponse = await this.fetchApi(`/repos/${this.repo}/git/refs/heads/${branchName}`);
+    const refData = await refResponse.json();
+    const latestCommitSha = refData.object.sha;
+
+    // 3. Get base tree SHA
+    const commitResponse = await this.fetchApi(`/repos/${this.repo}/git/commits/${latestCommitSha}`);
+    const commitData = await commitResponse.json();
+    const baseTreeSha = commitData.tree.sha;
+
+    // 4. Create blobs and tree items
+    const treeItems = await Promise.all(files.map(async (file) => {
+      // Content must be base64 encoded for POST blobs
+      // using btoa(unescape(encodeURIComponent())) for utf-8 support
+      const encodedContent = btoa(unescape(encodeURIComponent(file.content)));
+      
+      const blobResponse = await this.fetchApi(`/repos/${this.repo}/git/blobs`, {
+        method: 'POST',
+        body: JSON.stringify({
+          content: encodedContent,
+          encoding: 'base64'
+        })
+      });
+      const blobData = await blobResponse.json();
+
+      return {
+        path: file.path, // raw path for tree API
+        mode: '100644',
+        type: 'blob',
+        sha: blobData.sha
+      };
+    }));
+
+    // 5. Create new tree
+    const treeResponse = await this.fetchApi(`/repos/${this.repo}/git/trees`, {
+      method: 'POST',
+      body: JSON.stringify({
+        base_tree: baseTreeSha,
+        tree: treeItems
+      })
+    });
+    const treeData = await treeResponse.json();
+
+    // 6. Create new commit
+    const newCommitResponse = await this.fetchApi(`/repos/${this.repo}/git/commits`, {
+      method: 'POST',
+      body: JSON.stringify({
+        message,
+        tree: treeData.sha,
+        parents: [latestCommitSha]
+      })
+    });
+    const newCommitData = await newCommitResponse.json();
+
+    // 7. Update branch ref
+    await this.fetchApi(`/repos/${this.repo}/git/refs/heads/${branchName}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        sha: newCommitData.sha,
+        force: false
+      })
+    });
+  }
 }

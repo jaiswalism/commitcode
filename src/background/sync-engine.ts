@@ -130,14 +130,9 @@ export class SyncEngine {
       // 3. Version suffixing & GitHub update logic
       let version = 1;
       let targetPath = '';
-      let shaToUpdate: string | undefined = undefined;
 
       if (versionMode === 'overwrite') {
         targetPath = this.resolvePath(problem, 1, structure, 'overwrite');
-        const existingSha = await client.getFileSha(targetPath);
-        if (existingSha) {
-          shaToUpdate = existingSha;
-        }
       } else {
         const v1Path = this.resolvePath(problem, 1, structure, 'versioned');
         const parts = v1Path.split('/');
@@ -168,9 +163,10 @@ export class SyncEngine {
         targetPath = this.resolvePath(problem, version, structure, 'versioned');
       }
 
-      // 4. Generate header comment and upload
+      // 4. Generate header comment and combine code
       const headerComment = this.generateHeaderComment(problem);
       const fullCode = headerComment + problem.code;
+      
       let commitMsg = settings.commitTemplate;
       commitMsg = commitMsg.replace(/{title}/g, problem.title);
       commitMsg = commitMsg.replace(/{id}/g, problem.id);
@@ -178,11 +174,25 @@ export class SyncEngine {
       commitMsg = commitMsg.replace(/{language}/g, problem.language);
       commitMsg = commitMsg.replace(/{runtime}/g, problem.runtime || 'N/A');
       commitMsg = commitMsg.replace(/{memory}/g, problem.memory || 'N/A');
-      
-      console.log(`[CommitCode] Uploading ${targetPath}...`);
-      await client.putFile(targetPath, fullCode, commitMsg, shaToUpdate);
 
-      // 5. On success
+      const filesToCommit = [
+        { path: targetPath, content: fullCode }
+      ];
+
+      // 5. Generate README content if enabled
+      if (settings.readmeEnabled) {
+        const allProblems = await db.getAllProblems();
+        const readmeGenerator = new ReadmeGenerator();
+        const readmeContent = readmeGenerator.generate(settings, allProblems);
+        if (readmeContent) {
+          filesToCommit.push({ path: 'README.md', content: readmeContent });
+        }
+      }
+      
+      console.log(`[CommitCode] Batch committing ${filesToCommit.length} files...`);
+      await client.commitFiles(filesToCommit, commitMsg);
+
+      // 6. On success
       problem.version = version;
       await db.saveProblem(problem);
       await db.addLogEntry({
@@ -192,11 +202,6 @@ export class SyncEngine {
         status: 'success'
       });
       console.log(`[CommitCode] Successfully synced ${problem.id} to GitHub.`);
-
-      // 6. Generate and push README
-      const generator = new ReadmeGenerator();
-      await generator.generateAndPush(client, settings);
-      console.log(`[CommitCode] Successfully generated and pushed README.`);
 
     } catch (error: any) {
       console.error('[CommitCode] Sync failed:', error);
