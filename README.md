@@ -20,9 +20,22 @@
 
 ---
 
-## 🚀 Installation (Developer Mode)
+## 🚀 Installation
 
-Since CommitCode is currently in active development, you can load it directly into Chrome using Developer Mode.
+### Option 1: Easy Installation (Recommended)
+You do not need to build the extension yourself. You can download the latest pre-built version directly from our releases!
+
+1. Go to the [Releases](https://github.com/jaiswalism/commitcode/releases) page of this repository.
+2. Download the `commitcode-extension.zip` file from the latest release.
+3. Extract the `.zip` file on your computer.
+4. Open Google Chrome and navigate to `chrome://extensions/`.
+5. Enable **Developer mode** (toggle switch in the top right corner).
+6. Click **Load unpacked** in the top left corner.
+7. Select the extracted folder!
+
+### Option 2: Build from Source (Developer Mode)
+
+Since CommitCode is currently in active development, you can also build it directly from source.
 
 1. **Clone or Download this repository** to your local machine:
    ```bash
