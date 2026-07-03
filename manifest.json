@@ -31,7 +31,8 @@
   ],
   "permissions": [
     "scripting",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "options_ui": {
     "page": "src/options/index.html",

@@ -35,7 +35,7 @@ export interface SyncLogEntry {
 }
 
 export interface RetryQueueItem {
-  problemId: string;
+  problem: ProblemRecord;
   reason: string;
   timestamp: number;
   attempts: number;

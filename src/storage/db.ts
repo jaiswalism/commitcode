@@ -71,9 +71,20 @@ export const db = {
   },
 
   async pushToQueue(item: Omit<RetryQueueItem, 'attempts'>): Promise<void> {
-    const queue = (await this.get<RetryQueueItem[]>('queue')) || [];
-    queue.push({ ...item, attempts: 0 });
-    await this.set('queue', queue);
+    const queue = await this.getQueue();
+    const existing = queue.find(q => q.problem.id === item.problem.id && q.problem.language === item.problem.language);
+    if (existing) {
+      existing.reason = item.reason;
+      existing.timestamp = item.timestamp;
+      // Keep existing attempts
+      existing.problem = item.problem; // Update problem in case the code changed again
+    } else {
+      queue.push({
+        ...item,
+        attempts: 0
+      });
+    }
+    await this.saveQueue(queue);
   },
 
   async getQueue(): Promise<RetryQueueItem[]> {
@@ -82,5 +93,11 @@ export const db = {
 
   async saveQueue(queue: RetryQueueItem[]): Promise<void> {
     await this.set('queue', queue);
+  },
+
+  async removeFromQueue(problemId: string, language: string): Promise<void> {
+    const queue = await this.getQueue();
+    const updatedQueue = queue.filter(q => !(q.problem.id === problemId && q.problem.language === language));
+    await this.saveQueue(updatedQueue);
   }
 };

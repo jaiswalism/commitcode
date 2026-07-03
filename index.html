@@ -31,18 +31,74 @@
       button:hover {
         background-color: #0051a2;
       }
+      .queue-container {
+        margin-top: 20px;
+        text-align: left;
+        background: #222;
+        padding: 10px;
+        border-radius: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .queue-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #333;
+        font-size: 13px;
+      }
+      .queue-item:last-child {
+        border-bottom: none;
+      }
+      .queue-item-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .queue-item-reason {
+        font-size: 11px;
+        color: #888;
+      }
+      .queue-actions {
+        display: flex;
+        gap: 5px;
+      }
+      .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 14px;
+        border-radius: 4px;
+        margin: 0;
+        opacity: 0.8;
+      }
+      .icon-btn:hover {
+        opacity: 1;
+        background-color: #333;
+      }
+      .btn-delete {
+        color: #ff5252;
+      }
+      .btn-sync {
+        color: #4caf50;
+      }
     </style>
   </head>
   <body>
     <div id="app">
       <h2>CommitCode</h2>
       <p>Your submissions sync automatically in the background.</p>
+      
+      <div class="queue-container">
+        <h4 style="margin: 0 0 10px 0;">Pending Commits</h4>
+        <div id="queue-list">
+          <div style="font-size: 13px; color: #888; text-align: center;">Loading...</div>
+        </div>
+      </div>
+
       <button id="open-options">Open Settings</button>
     </div>
-    <script type="module">
-      document.getElementById('open-options').addEventListener('click', () => {
-        chrome.runtime.openOptionsPage();
-      });
-    </script>
+    <script type="module" src="/src/popup/index.ts"></script>
   </body>
 </html>

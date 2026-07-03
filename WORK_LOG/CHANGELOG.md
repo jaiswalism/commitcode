@@ -5,6 +5,7 @@
 - Created `LICENSE` and completely rewrote `README.md` with detailed, image-backed setup instructions.
 - Implemented Popup Dashboard and Options page (Phases 8 & 9) for user configuration.
 - Wired content scripts to the background service worker.
+- Implemented Retry Queue (Phase 7): Added background alarm, popup UI management, timeout handling, and payload preservation.
 
 ## 2026-07-02
 - Initialized CommitCode project scaffolding (Phase 0).
@@ -25,6 +26,7 @@
 - [x] Phase 4: Sync Engine (`src/background/sync-engine.ts`)
 - [x] Phase 5: README Generator (`src/github/readme-generator.ts`)
 - [x] Phase 6: Commit Templating & Batched Commits via Git Database API
+- [x] Phase 7: Retry Queue & Popup Dashboard Management
 - [x] Phase 8 & 9: Popup UI and Options Page (`src/popup`, `src/options`)
 - [x] Rebranding & Git History Rewrite: Renamed project to CommitCode, rebuilt Git history, expanded `README.md`.
 ### Details

@@ -33,33 +33,47 @@ export class GitHubClient {
   }
 
   private async fetchApi(endpoint: string, options: RequestInit = {}): Promise<Response> {
-    const headers = {
-      'Authorization': `token ${this.pat}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...(options.headers || {})
-    };
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers
-    });
+    try {
+      const headers = {
+        'Authorization': `token ${this.pat}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(options.headers || {})
+      };
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new GitHubError(401, 'Invalid GitHub Personal Access Token');
-      } else if (response.status === 403) {
-        throw new GitHubError(403, 'Rate limit exceeded or permission denied');
-      } else if (response.status === 404) {
-        throw new GitHubError(404, 'Repository or path not found');
-      } else if (response.status === 409) {
-        throw new GitHubError(409, 'Conflict: The provided SHA does not match the current file');
-      } else {
-        throw new GitHubError(response.status, `GitHub API Error: ${response.statusText}`);
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
+        headers,
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new GitHubError(401, 'Invalid GitHub Personal Access Token');
+        } else if (response.status === 403) {
+          throw new GitHubError(403, 'Rate limit exceeded or permission denied');
+        } else if (response.status === 404) {
+          throw new GitHubError(404, 'Repository or path not found');
+        } else if (response.status === 409) {
+          throw new GitHubError(409, 'Conflict: The provided SHA does not match the current file');
+        } else {
+          throw new GitHubError(response.status, `GitHub API Error: ${response.statusText}`);
+        }
       }
-    }
 
-    return response;
+      return response;
+    } catch (e: any) {
+      clearTimeout(timeoutId);
+      if (e.name === 'AbortError') {
+        throw new Error('Network request timed out after 15 seconds.');
+      }
+      throw e;
+    }
   }
 
   async testConnection(): Promise<void> {

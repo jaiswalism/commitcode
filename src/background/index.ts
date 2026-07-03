@@ -65,12 +65,37 @@ export function injectFetchInterceptorInMainWorld() {
   };
 }
 
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.create('retryQueueAlarm', { periodInMinutes: 5 });
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.alarms.get('retryQueueAlarm', (alarm) => {
+    if (!alarm) {
+      chrome.alarms.create('retryQueueAlarm', { periodInMinutes: 5 });
+    }
+  });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'retryQueueAlarm') {
+    engine.processRetryQueue();
+  }
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[CommitCode] Background received message:', message);
   if (message.type === 'SYNC_PROBLEM' && message.problem) {
     engine.sync(message.problem);
     sendResponse({ success: true });
     return;
+  }
+
+  if (message.type === 'PROCESS_QUEUE') {
+    engine.processRetryQueue().then(() => {
+      sendResponse({ success: true });
+    });
+    return true; // Keep message channel open for async response
   }
 
   if (message.type === 'INJECT_INTERCEPTOR' && sender.tab?.id) {

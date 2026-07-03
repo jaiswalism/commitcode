@@ -81,7 +81,7 @@ export class SyncEngine {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  public async sync(problem: ProblemRecord) {
+  public async sync(problem: ProblemRecord, isRetry: boolean = false) {
     try {
       const settings = await db.getSettings();
       
@@ -92,11 +92,13 @@ export class SyncEngine {
 
       if (!PAT || !REPO) {
         console.error('[CommitCode] Sync failed: GitHub PAT or Repository not configured in Settings.');
-        await db.pushToQueue({
-          problemId: problem.id,
-          reason: 'GitHub PAT or Repository not configured',
-          timestamp: Date.now(),
-        });
+        if (!isRetry) {
+          await db.pushToQueue({
+            problem: problem,
+            reason: 'GitHub PAT or Repository not configured',
+            timestamp: Date.now(),
+          });
+        }
         await db.addLogEntry({
           problemId: problem.id,
           title: problem.title,
@@ -207,11 +209,13 @@ export class SyncEngine {
       console.error('[CommitCode] Sync failed:', error);
       
       // 7. On failure: push to retry queue
-      await db.pushToQueue({
-        problemId: problem.id,
-        reason: error.message || 'Unknown network/API error',
-        timestamp: Date.now(),
-      });
+      if (!isRetry) {
+        await db.pushToQueue({
+          problem: problem,
+          reason: error.message || 'Unknown network/API error',
+          timestamp: Date.now(),
+        });
+      }
       
       await db.addLogEntry({
         problemId: problem.id,
@@ -220,6 +224,38 @@ export class SyncEngine {
         status: 'failure',
         reason: error.message || 'Unknown network/API error'
       });
+      
+      if (isRetry) {
+        throw error; // Rethrow to let processRetryQueue handle attempts
+      }
     }
+  }
+
+  public async processRetryQueue() {
+    const queue = await db.getQueue();
+    if (queue.length === 0) return;
+
+    console.log(`[CommitCode] Processing ${queue.length} items in retry queue...`);
+    const remainingQueue: typeof queue = [];
+    
+    for (const item of queue) {
+      if (item.attempts >= 3) {
+        console.warn(`[CommitCode] Problem ${item.problem.id} reached max retries. Dropping.`);
+        continue;
+      }
+
+      try {
+        await this.sync(item.problem, true);
+        console.log(`[CommitCode] Successfully retried ${item.problem.id}.`);
+      } catch (e: any) {
+        console.warn(`[CommitCode] Retry failed for ${item.problem.id}.`);
+        item.attempts += 1;
+        item.timestamp = Date.now();
+        item.reason = e.message || 'Retry failed';
+        remainingQueue.push(item);
+      }
+    }
+
+    await db.saveQueue(remainingQueue);
   }
 }

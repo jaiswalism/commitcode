@@ -1,7 +1,6 @@
 # Current Focus
 
-Phase 7 — Retry Queue & Reliability
-- Currently, when a submission fails (e.g. rate limit, offline), we push it to the retry queue in `db.ts` but never process it.
-- Implement a background alarm (`chrome.alarms`) or interval to periodically process the retry queue.
-- Make sure to clear items from the queue once successfully synced.
-- Integrate exponential backoff or max attempts limits.
+Phase 8 — Advanced: GitHub Actions / CI Integration (Optional/Exploratory)
+- Evaluate whether we want to provide users with a pre-built GitHub Action to automatically run tests or update their README in the repo itself.
+- Consider polishing the codebase for public release (e.g., removing debug logs, checking edge cases).
+- Ensure all previously built phases are perfectly stable.
