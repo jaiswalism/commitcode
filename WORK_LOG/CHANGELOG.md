@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-04 (v2.0.0)
+- **Massive Architectural Change**: Shifted Single Source of Truth for synced problems to GitHub via `commitcode.json`. This completely solves the multi-device problem where using a second laptop would reset the README.
+- Automatically migrates existing local databases to the remote repository.
+- Re-architected `ReadmeGenerator` to be entirely stateless and driven by the remote configuration file.
+
 ## 2026-07-03
 - Redesigned Onboarding, Options, and Popup UIs with a modern, premium glassmorphic dark theme using Tailwind CSS.
 - Rebranded extension from "LeetSync" to "CommitCode".

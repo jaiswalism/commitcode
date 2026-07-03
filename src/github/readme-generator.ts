@@ -1,4 +1,4 @@
-import { ProblemRecord, Settings } from '../storage/types';
+import { ProblemMetadata, Settings } from '../storage/types';
 
 export class ReadmeGenerator {
   private getExtensionByLanguage(language: string): string {
@@ -22,7 +22,7 @@ export class ReadmeGenerator {
     return map[language.toLowerCase()] || 'txt';
   }
 
-  private resolvePath(problem: ProblemRecord, settings: Settings): string {
+  private resolvePath(problem: ProblemMetadata, settings: Settings): string {
     const paddedId = problem.id.toString().padStart(4, '0');
     const safeTitle = problem.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const ext = this.getExtensionByLanguage(problem.language);
@@ -41,8 +41,8 @@ export class ReadmeGenerator {
       case 'Language':
         return `${problem.language}/${filename}`;
       case 'Number':
-        const paddedId = problem.id.toString().padStart(4, '0');
-        return `${paddedId}/${filename}`;
+        const paddedIdFolder = problem.id.toString().padStart(4, '0');
+        return `${paddedIdFolder}/${filename}`;
       case 'Flat':
         return filename;
       case 'Topic':
@@ -52,7 +52,7 @@ export class ReadmeGenerator {
     }
   }
 
-  public generate(settings: Settings, allProblems: ProblemRecord[]): string {
+  public generate(settings: Settings, allProblems: ProblemMetadata[]): string {
     if (allProblems.length === 0) return '';
 
     let total = 0;

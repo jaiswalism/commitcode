@@ -181,11 +181,46 @@ export class SyncEngine {
         { path: targetPath, content: fullCode }
       ];
 
-      // 5. Generate README content if enabled
+      // 5. Remote Source of Truth & README Generation
       if (settings.readmeEnabled) {
-        const allProblems = await db.getAllProblems();
+        problem.version = version;
+        
+        let remoteMetadata: any[] = [];
+        try {
+          const remoteFile = await client.getFile('commitcode.json');
+          // UTF-8 base64 decode
+          const jsonStr = decodeURIComponent(escape(atob(remoteFile.content)));
+          remoteMetadata = JSON.parse(jsonStr);
+        } catch (e: any) {
+          if (e.status !== 404) {
+            console.warn('[CommitCode] Could not fetch commitcode.json, assuming new or missing.', e);
+          }
+        }
+
+        // Migrate local data to remote if remote is empty
+        if (remoteMetadata.length === 0) {
+          const localProblems = await db.getAllProblems();
+          remoteMetadata = localProblems.map(p => {
+            const { code: _, ...rest } = p;
+            return rest;
+          });
+        }
+
+        // Include current problem
+        const { code: _code, ...currentMeta } = problem;
+        const index = remoteMetadata.findIndex(p => p.id === currentMeta.id && p.language === currentMeta.language);
+        if (index >= 0) {
+          remoteMetadata[index] = currentMeta;
+        } else {
+          remoteMetadata.push(currentMeta);
+        }
+
+        // Queue commitcode.json
+        const newJsonStr = JSON.stringify(remoteMetadata, null, 2);
+        filesToCommit.push({ path: 'commitcode.json', content: newJsonStr });
+
         const readmeGenerator = new ReadmeGenerator();
-        const readmeContent = readmeGenerator.generate(settings, allProblems);
+        const readmeContent = readmeGenerator.generate(settings, remoteMetadata);
         if (readmeContent) {
           filesToCommit.push({ path: 'README.md', content: readmeContent });
         }

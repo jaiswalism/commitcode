@@ -13,6 +13,8 @@ export interface ProblemRecord {
   version: number;
 }
 
+export type ProblemMetadata = Omit<ProblemRecord, 'code'>;
+
 export type FolderStructure = 'Difficulty' | 'Topic' | 'Language' | 'Number' | 'Flat';
 
 export interface Settings {

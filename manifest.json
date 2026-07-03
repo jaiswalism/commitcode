@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CommitCode",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Privacy-first browser extension that automatically syncs accepted coding problem submissions from LeetCode to GitHub.",
   "icons": {
     "16": "logo.png",
