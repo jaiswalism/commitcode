@@ -64,8 +64,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  const MASKED_PAT = '••••••••••••••••••••••••••••••••••••••••';
+
   const settings = await db.getSettings();
-  if (settings.pat) patInput.value = settings.pat;
+  if (settings.pat) patInput.value = MASKED_PAT;
   if (settings.repository) repoInput.value = settings.repository;
   if (settings.folderStructure) folderStructureSelect.value = settings.folderStructure;
   if (settings.versionMode) versionModeSelect.value = settings.versionMode;
@@ -111,7 +113,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   testBtn.addEventListener('click', async () => {
-    const pat = patInput.value.trim();
+    let pat = patInput.value.trim();
+    if (pat === MASKED_PAT && settings.pat) {
+      pat = settings.pat;
+    }
     const repo = cleanRepoInput(repoInput.value);
     repoInput.value = repo;
     
@@ -139,7 +144,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   saveBtn.addEventListener('click', async () => {
-    const pat = patInput.value.trim();
+    let pat = patInput.value.trim();
+    if (pat === MASKED_PAT && settings.pat) {
+      pat = settings.pat;
+    }
     const repo = cleanRepoInput(repoInput.value);
     repoInput.value = repo;
     const folderStructure = folderStructureSelect.value as FolderStructure;

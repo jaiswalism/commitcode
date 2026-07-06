@@ -92,15 +92,30 @@ export class ReadmeGenerator {
 
     total = uniqueIds.size;
 
+    const now = new Date();
+    const month = now.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+    const day = now.toLocaleString('en-US', { day: 'numeric', timeZone: 'UTC' });
+    const year = now.toLocaleString('en-US', { year: 'numeric', timeZone: 'UTC' });
+    const time = now.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+
+    const lastUpdated = `Last synced • ${month} ${day}, ${year} • ${time} UTC`;
+
     const markdown = `# LeetCode Solutions
 
-Automatically synced by [CommitCode](https://github.com/jaiswalism/CommitCode)
+Automatically synced by [CommitCode](https://github.com/jaiswalism/CommitCode) 
 
-## Stats
-- **Total Solved:** ${total}
-- **Easy:** ${easy}
-- **Medium:** ${medium}
-- **Hard:** ${hard}
+<div align="center">
+  <img src="https://img.shields.io/badge/Total_Solved-${total}-blue?style=for-the-badge&logo=leetcode" alt="Total Solved" />
+  <img src="https://img.shields.io/badge/Easy-${easy}-brightgreen?style=for-the-badge" alt="Easy" />
+  <img src="https://img.shields.io/badge/Medium-${medium}-yellow?style=for-the-badge" alt="Medium" />
+  <img src="https://img.shields.io/badge/Hard-${hard}-red?style=for-the-badge" alt="Hard" />
+</div>
+
+<div align="center">
+  <i>${lastUpdated}</i>
+</div>
+
+---
 
 ## Solutions
 | # | Problem | Difficulty | Language | Date |

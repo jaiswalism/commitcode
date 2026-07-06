@@ -83,6 +83,14 @@ export class SyncEngine {
 
   public async sync(problem: ProblemRecord, isRetry: boolean = false) {
     try {
+      if (!isRetry) {
+        await db.pushToQueue({
+          problem: problem,
+          reason: 'Syncing to GitHub...',
+          timestamp: Date.now(),
+        });
+      }
+
       const settings = await db.getSettings();
       
       const PAT = settings.pat;
@@ -92,13 +100,11 @@ export class SyncEngine {
 
       if (!PAT || !REPO) {
         console.error('[CommitCode] Sync failed: GitHub PAT or Repository not configured in Settings.');
-        if (!isRetry) {
-          await db.pushToQueue({
-            problem: problem,
-            reason: 'GitHub PAT or Repository not configured',
-            timestamp: Date.now(),
-          });
-        }
+        await db.pushToQueue({
+          problem: problem,
+          reason: 'GitHub PAT or Repository not configured',
+          timestamp: Date.now(),
+        });
         await db.addLogEntry({
           problemId: problem.id,
           title: problem.title,
@@ -123,6 +129,7 @@ export class SyncEngine {
             status: 'skipped',
             reason: 'Duplicate code'
           });
+          await db.removeFromQueue(problem.id, problem.language);
           return;
         }
       }
@@ -238,6 +245,7 @@ export class SyncEngine {
         timestamp: Date.now(),
         status: 'success'
       });
+      await db.removeFromQueue(problem.id, problem.language);
       console.log(`[CommitCode] Successfully synced ${problem.id} to GitHub.`);
 
     } catch (error: any) {
