@@ -155,7 +155,7 @@ export class GitHubClient {
     }
   }
 
-  async commitFiles(files: {path: string, content: string}[], message: string): Promise<void> {
+  async commitFiles(files: {path: string, content: string}[], message: string): Promise<{ sha: string; htmlUrl: string }> {
     // 1. Get default branch
     const repoInfoResponse = await this.fetchApi(`/repos/${this.repo}`);
     const repoInfo = await repoInfoResponse.json();
@@ -223,5 +223,10 @@ export class GitHubClient {
         force: false
       })
     });
+
+    return {
+      sha: newCommitData.sha,
+      htmlUrl: newCommitData.html_url || `https://github.com/${this.repo}/commit/${newCommitData.sha}`
+    };
   }
 }

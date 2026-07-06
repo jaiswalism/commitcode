@@ -1,9 +1,55 @@
 import { db } from '../storage/db';
 import { ProblemRecord } from '../storage/types';
-import { GitHubClient } from '../github/client';
+import { GitHubClient, GitHubError } from '../github/client';
 import { ReadmeGenerator } from '../github/readme-generator';
 
 export class SyncEngine {
+  /**
+   * Send a message to the LeetCode page so the content script can render a toast.
+   * When the originating tabId is known (initial sync) we target it directly;
+   * otherwise (retry queue / alarm) we broadcast to any open LeetCode tabs.
+   */
+  private notifyTab(tabId: number | undefined, message: { type: string; payload?: any }): void {
+    if (tabId !== undefined) {
+      chrome.tabs.sendMessage(tabId, message).catch(() => {});
+      return;
+    }
+
+    chrome.tabs.query({ url: 'https://leetcode.com/*' }, (tabs) => {
+      for (const tab of tabs) {
+        if (tab.id !== undefined) {
+          chrome.tabs.sendMessage(tab.id, message).catch(() => {});
+        }
+      }
+    });
+  }
+
+  /** Turn a raw error into a short, human-readable reason for the failure toast. */
+  private humanizeError(error: any): string {
+    if (error instanceof GitHubError) {
+      switch (error.status) {
+        case 401:
+          return '401 Unauthorized — check your GitHub PAT';
+        case 403:
+          return '403 Forbidden — rate limit hit or missing repo permission';
+        case 404:
+          return '404 Not Found — repository or path does not exist';
+        case 409:
+          return '409 Conflict — file changed on GitHub, will retry';
+        default:
+          return error.message;
+      }
+    }
+    return error?.message || 'Unknown network/API error';
+  }
+
+  /** File-safe slug used both for the target path and the success toast. */
+  private buildSlug(problem: ProblemRecord): string {
+    const paddedId = problem.id.toString().padStart(4, '0');
+    const safeTitle = problem.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return `${paddedId}-${safeTitle}`;
+  }
+
   private getExtensionByLanguage(language: string): string {
     const map: Record<string, string> = {
       'cpp': 'cpp', 'c++': 'cpp', 
@@ -81,7 +127,7 @@ export class SyncEngine {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  public async sync(problem: ProblemRecord, isRetry: boolean = false) {
+  public async sync(problem: ProblemRecord, isRetry: boolean = false, tabId?: number) {
     try {
       if (!isRetry) {
         await db.pushToQueue({
@@ -111,6 +157,10 @@ export class SyncEngine {
           timestamp: Date.now(),
           status: 'failure',
           reason: 'GitHub PAT or Repository not configured'
+        });
+        this.notifyTab(tabId, {
+          type: 'PUSH_FAILURE',
+          payload: { slug: this.buildSlug(problem), error: 'GitHub PAT or Repository not configured' },
         });
         return;
       }
@@ -234,7 +284,7 @@ export class SyncEngine {
       }
       
       console.log(`[CommitCode] Batch committing ${filesToCommit.length} files...`);
-      await client.commitFiles(filesToCommit, commitMsg);
+      const commit = await client.commitFiles(filesToCommit, commitMsg);
 
       // 6. On success
       problem.version = version;
@@ -248,26 +298,43 @@ export class SyncEngine {
       await db.removeFromQueue(problem.id, problem.language);
       console.log(`[CommitCode] Successfully synced ${problem.id} to GitHub.`);
 
+      // Notify the LeetCode page so it can render a success toast.
+      this.notifyTab(tabId, {
+        type: 'PUSH_SUCCESS',
+        payload: {
+          slug: this.buildSlug(problem),
+          repo: REPO,
+          commitUrl: commit.htmlUrl,
+        },
+      });
+
     } catch (error: any) {
       console.error('[CommitCode] Sync failed:', error);
-      
+      const reason = this.humanizeError(error);
+
       // 7. On failure: push to retry queue
       if (!isRetry) {
         await db.pushToQueue({
           problem: problem,
-          reason: error.message || 'Unknown network/API error',
+          reason: reason,
           timestamp: Date.now(),
         });
       }
-      
+
       await db.addLogEntry({
         problemId: problem.id,
         title: problem.title,
         timestamp: Date.now(),
         status: 'failure',
-        reason: error.message || 'Unknown network/API error'
+        reason: reason
       });
-      
+
+      // Notify the LeetCode page so it can render a failure toast.
+      this.notifyTab(tabId, {
+        type: 'PUSH_FAILURE',
+        payload: { slug: this.buildSlug(problem), error: reason },
+      });
+
       if (isRetry) {
         throw error; // Rethrow to let processRetryQueue handle attempts
       }
