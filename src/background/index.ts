@@ -89,7 +89,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[CommitCode] Background received message:', message);
   if (message.type === 'SYNC_PROBLEM' && message.problem) {
-    engine.sync(message.problem);
+    engine.sync(message.problem, false, sender.tab?.id);
     sendResponse({ success: true });
     return;
   }
